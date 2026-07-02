@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const routes_1 = __importDefault(require("./routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -15,6 +16,8 @@ const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
     ? `https://${codespaceName}-8000.app.github.dev`
     : 'http://localhost:8000';
+const apiBaseUrl = `${baseUrl}/api`;
+app.use('/api', routes_1.default);
 app.get('/api/health', (_req, res) => {
     res.json({
         status: 'ok',
@@ -22,6 +25,7 @@ app.get('/api/health', (_req, res) => {
         port: PORT,
         mongodb: MONGODB_URI,
         baseUrl,
+        apiBaseUrl,
     });
 });
 async function startServer() {

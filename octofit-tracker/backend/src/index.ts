@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 
+import apiRouter from './routes';
+
 dotenv.config();
 
 const app = express();
@@ -14,6 +16,9 @@ const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
   : 'http://localhost:8000';
+const apiBaseUrl = `${baseUrl}/api`;
+
+app.use('/api', apiRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({
@@ -22,6 +27,7 @@ app.get('/api/health', (_req, res) => {
     port: PORT,
     mongodb: MONGODB_URI,
     baseUrl,
+    apiBaseUrl,
   });
 });
 
